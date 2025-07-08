@@ -1,10 +1,10 @@
-# 💰 LanaApp
+#  LanaApp
 
 **LanaApp** es una aplicación móvil de finanzas personales construida con **React Native**. Permite a los usuarios gestionar ingresos, egresos, presupuestos y visualizar sus finanzas de forma clara, profesional y sencilla.
 
 ---
 
-## 🚀 Instalación del proyecto
+##  Instalación del proyecto
 
 ### 1. Clonar el repositorio
 
