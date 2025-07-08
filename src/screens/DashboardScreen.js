@@ -12,11 +12,13 @@ import {
 } from 'react-native';
 
 const { height, width } = Dimensions.get('window');
-const HEADER_HEIGHT = height * 0.45; // 45% de la altura de pantalla
+const HEADER_HEIGHT = height * 0.45;
 
 export default function WelcomeScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      
+      {/* Imagen de fondo con overlay y contenido de bienvenida */}
       <ImageBackground
         source={require('../assets/fondo.png')}
         style={[styles.header, { height: HEADER_HEIGHT }]}
@@ -29,6 +31,7 @@ export default function WelcomeScreen({ navigation }) {
               Gestión financiera inteligente y sencilla para todos.
             </Text>
 
+            {/* Botones de navegación */}
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.primaryButton}
@@ -36,6 +39,7 @@ export default function WelcomeScreen({ navigation }) {
               >
                 <Text style={styles.primaryText}>Regístrate gratis</Text>
               </TouchableOpacity>
+
               <TouchableOpacity
                 style={styles.secondaryButton}
                 onPress={() => navigation.navigate('Login')}
@@ -47,17 +51,20 @@ export default function WelcomeScreen({ navigation }) {
         </View>
       </ImageBackground>
 
+      {/* Estadísticas o testimonios */}
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
           <Text style={styles.statTitle}>Usuarios satisfechos</Text>
           <Text style={styles.statValue}>+10,000</Text>
         </View>
+
         <View style={styles.statCard}>
           <Text style={styles.statTitle}>Reseñas positivas</Text>
           <Text style={styles.statValue}>4.8/5</Text>
         </View>
       </View>
 
+      {/* Imagen inferior decorativa */}
       <Image
         source={require('../assets/finanzas.jpg')}
         style={styles.bottomImage}
@@ -70,12 +77,12 @@ export default function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#ecefe9', 
+    backgroundColor: '#ecefe9',
   },
   header: {
     width: '100%',
     position: 'relative',
-    backgroundColor: '#ecefe9', 
+    backgroundColor: '#ecefe9',
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
@@ -106,7 +113,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: 12, // solo soportado en React Native 0.71+
   },
   primaryButton: {
     backgroundColor: '#00a86b',
@@ -148,7 +155,7 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     padding: 16,
     alignItems: 'center',
-    width: width * 0.42, 
+    width: width * 0.42,
     marginVertical: 8,
     elevation: 2,
     shadowColor: '#000',
@@ -169,7 +176,6 @@ const styles = StyleSheet.create({
   },
   bottomImage: {
     width: '100%',
-    height: height * 0.38, 
-    
+    height: height * 0.38,
   },
 });
