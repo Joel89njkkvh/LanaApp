@@ -7,34 +7,43 @@ import {
   ImageBackground,
   Image,
   ScrollView,
+  Dimensions,
+  Platform,
 } from 'react-native';
+
+const { height, width } = Dimensions.get('window');
+const HEADER_HEIGHT = height * 0.45; // 45% de la altura de pantalla
 
 export default function WelcomeScreen({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <ImageBackground
         source={require('../assets/fondo.png')}
-        style={styles.header}
+        style={[styles.header, { height: HEADER_HEIGHT }]}
         resizeMode="cover"
       >
-        <Text style={styles.title}>Bienvenido a Lana App</Text>
-        <Text style={styles.subtitle}>
-          Gestión financiera inteligente y sencilla para todos.
-        </Text>
+        <View style={styles.overlay}>
+          <View style={styles.overlayContent}>
+            <Text style={styles.title}>Bienvenido a Lana App</Text>
+            <Text style={styles.subtitle}>
+              Gestión financiera inteligente y sencilla para todos.
+            </Text>
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={styles.primaryButton}
-            onPress={() => navigation.navigate('Register')}
-          >
-            <Text style={styles.primaryText}>Regístrate gratis</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={() => navigation.navigate('Login')}
-          >
-            <Text style={styles.secondaryText}>Inicia sesión</Text>
-          </TouchableOpacity>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity
+                style={styles.primaryButton}
+                onPress={() => navigation.navigate('Register')}
+              >
+                <Text style={styles.primaryText}>Regístrate gratis</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.secondaryButton}
+                onPress={() => navigation.navigate('Login')}
+              >
+                <Text style={styles.secondaryText}>Inicia sesión</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </ImageBackground>
 
@@ -61,11 +70,22 @@ export default function WelcomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#ecefe9', 
   },
   header: {
-    paddingTop: 100,
-    paddingBottom: 50,
+    width: '100%',
+    position: 'relative',
+    backgroundColor: '#ecefe9', 
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  overlayContent: {
+    paddingTop: 80,
+    paddingBottom: 40,
     paddingHorizontal: 24,
     alignItems: 'center',
   },
@@ -85,6 +105,7 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     justifyContent: 'center',
+    flexWrap: 'wrap',
     gap: 12,
   },
   primaryButton: {
@@ -92,7 +113,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 20,
     borderRadius: 100,
-    marginHorizontal: 5,
+    margin: 5,
   },
   primaryText: {
     color: '#fff',
@@ -106,7 +127,7 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: '#00a86b',
-    marginHorizontal: 5,
+    margin: 5,
   },
   secondaryText: {
     color: '#00a86b',
@@ -118,6 +139,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     paddingHorizontal: 16,
     paddingVertical: 28,
+    flexWrap: 'wrap',
   },
   statCard: {
     backgroundColor: '#fff',
@@ -126,9 +148,10 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     padding: 16,
     alignItems: 'center',
-    width: '45%',
-    elevation: 2, // Android shadow
-    shadowColor: '#000', // iOS shadow
+    width: width * 0.42, 
+    marginVertical: 8,
+    elevation: 2,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -146,7 +169,7 @@ const styles = StyleSheet.create({
   },
   bottomImage: {
     width: '100%',
-    height: 240,
-    marginTop: 10,
+    height: height * 0.38, 
+    
   },
 });

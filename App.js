@@ -12,9 +12,21 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="dashboard">
-        <Stack.Screen name="dashboard" component={DashboardScreen} options={{ title: 'Inicio' }} />
-        <Stack.Screen name="Login" component={LoginScreen} options={{ title: 'Iniciar sesión' }} />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: 'Registro' }} />
+        <Stack.Screen
+          name="dashboard"
+          component={DashboardScreen}
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ title: 'Iniciar sesión' }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
+          options={{ title: 'Registro' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
