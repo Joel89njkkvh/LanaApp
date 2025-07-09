@@ -28,12 +28,12 @@ export default function FinanzasScreen({ navigation }) {
           <Text style={styles.navText}>Transacciones</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuesto')}>
+        <TouchableOpacity style={styles.navItem}>
           <Feather name="trending-up" size={20} color="#000" />
           <Text style={[styles.navText, styles.navActive]}>Finanzas</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuestos')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuesto')}>
           <MaterialCommunityIcons name="scale-balance" size={20} color="#A57C36" />
           <Text style={styles.navText}>Presupuestos</Text>
         </TouchableOpacity>
@@ -94,10 +94,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   navItem: {
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    marginBottom: 10,
-  },
+  minWidth: 80, // o 90 si aún no cabe
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingHorizontal: 4,
+},
   navText: {
     fontSize: 13,
     color: '#A57C36',

@@ -79,19 +79,21 @@ const styles = StyleSheet.create({
   },
   navContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingBottom: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     marginBottom: 20,
-    flexWrap: 'wrap',
+    backgroundColor: '#FDFBF6',
   },
   navItem: {
-    alignItems: 'center',
-    paddingHorizontal: 8,
-    marginBottom: 10,
-  },
+  minWidth: 80, // o 90 si aún no cabe
+  alignItems: 'center',
+  justifyContent: 'center',
+  paddingHorizontal: 4,
+},
   navText: {
     fontSize: 13,
     color: '#A57C36',
