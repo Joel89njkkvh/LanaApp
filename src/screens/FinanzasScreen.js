@@ -4,26 +4,23 @@ import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get('window').width;
 
-export default function DashboardScreen({ navigation }) {
-  const [balance, setBalance] = useState(0);
-  const [income, setIncome] = useState(0);
-  const [expenses, setExpenses] = useState(0);
+export default function FinanzasScreen({ navigation }) {
+  const [inversiones, setInversiones] = useState(5000);
+  const [ahorros, setAhorros] = useState(3000);
+  const [rendimiento, setRendimiento] = useState(0);
 
   useEffect(() => {
-    const totalIncome = 8000;
-    const totalExpenses = 3500;
-    setIncome(totalIncome);
-    setExpenses(totalExpenses);
-    setBalance(totalIncome - totalExpenses);
+    const rendimientoMensual = 450;
+    setRendimiento(rendimientoMensual);
   }, []);
 
   return (
     <ScrollView style={styles.container}>
       {/* NAV BAR SUPERIOR */}
       <View style={styles.navContainer}>
-        <TouchableOpacity style={styles.navItem}>
-          <MaterialCommunityIcons name="speedometer" size={20} color="#000" />
-          <Text style={[styles.navText, styles.navActive]}>Dashboard</Text>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Dashboard')}>
+          <MaterialCommunityIcons name="speedometer" size={20} color="#A57C36" />
+          <Text style={styles.navText}>Dashboard</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Transaccion')}>
@@ -31,51 +28,46 @@ export default function DashboardScreen({ navigation }) {
           <Text style={styles.navText}>Transacciones</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Finanzas')}>
-          <Feather name="trending-up" size={20} color="#A57C36" />
-          <Text style={styles.navText}>Finanzas</Text>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuesto')}>
+          <Feather name="trending-up" size={20} color="#000" />
+          <Text style={[styles.navText, styles.navActive]}>Finanzas</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuesto')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuestos')}>
           <MaterialCommunityIcons name="scale-balance" size={20} color="#A57C36" />
           <Text style={styles.navText}>Presupuestos</Text>
         </TouchableOpacity>
       </View>
 
       {/* TITULO */}
-      <Text style={styles.title}>Resumen Financiero</Text>
+      <Text style={styles.title}>Estado Financiero</Text>
 
       {/* TARJETAS */}
       <View style={styles.cardGrid}>
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Saldo Actual</Text>
-          <Text style={styles.cardValue}>${balance}</Text>
-          <Text style={styles.cardChangePositive}>+5%</Text>
+          <Text style={styles.cardTitle}>Inversiones</Text>
+          <Text style={styles.cardValue}>${inversiones}</Text>
+          <Text style={styles.cardChangePositive}>+3%</Text>
         </View>
 
         <View style={styles.card}>
-          <Text style={styles.cardTitle}>Egresos</Text>
-          <Text style={styles.cardValue}>${expenses}</Text>
-          <Text style={styles.cardChangeNegative}>-1%</Text>
+          <Text style={styles.cardTitle}>Ahorros</Text>
+          <Text style={styles.cardValue}>${ahorros}</Text>
+          <Text style={styles.cardChangePositive}>+2%</Text>
         </View>
 
         <View style={styles.cardWide}>
-          <Text style={styles.cardTitle}>Ingresos</Text>
-          <Text style={styles.cardValue}>${income}</Text>
-        </View>
-
-        <View style={styles.cardWide}>
-          <Text style={styles.cardTitle}>Ingresos vs Egresos</Text>
-          <Text style={styles.cardValue}>${income - expenses}</Text>
-          <Text style={styles.cardChangePositive}>Este mes +5%</Text>
+          <Text style={styles.cardTitle}>Rendimiento Mensual</Text>
+          <Text style={styles.cardValue}>${rendimiento}</Text>
+          <Text style={styles.cardChangePositive}>Este mes +4%</Text>
         </View>
       </View>
 
-      {/* GRAFICO BARRAS */}
+      {/* GRAFICO BARRAS - RENDIMIENTO */}
       <View style={styles.barChart}>
-        {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'].map((month, index) => (
+        {['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'].map((month, index) => (
           <View key={index} style={styles.barContainer}>
-            <View style={[styles.bar, { height: 80 + index * 4 }]} />
+            <View style={[styles.bar, { height: 60 + index * 8 }]} />
             <Text style={styles.barLabel}>{month}</Text>
           </View>
         ))}
@@ -159,11 +151,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 4,
   },
-  cardChangeNegative: {
-    color: '#c0392b',
-    fontSize: 14,
-    marginTop: 4,
-  },
   barChart: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -180,7 +167,7 @@ const styles = StyleSheet.create({
   },
   bar: {
     width: 18,
-    backgroundColor: '#E2DCC8',
+    backgroundColor: '#A57C36',
     borderRadius: 4,
   },
   barLabel: {

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
+import {  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -24,8 +23,10 @@ export default function LoginScreen({ navigation }) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
     }
-
-    Alert.alert('Login', `Email: ${email}\nPassword: ${password}`);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'Dashboard' }],
+    });
   };
 
   return (
@@ -34,13 +35,11 @@ export default function LoginScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        {/* Encabezado */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>Bienvenido a LanaApp</Text>
           <Text style={styles.subtitle}>Gestión financiera para todos</Text>
         </View>
 
-        {/* Email */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Correo Electrónico</Text>
           <View style={styles.inputRow}>
@@ -57,7 +56,6 @@ export default function LoginScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Contraseña */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Contraseña</Text>
           <View style={styles.inputRow}>
@@ -70,28 +68,21 @@ export default function LoginScreen({ navigation }) {
               secureTextEntry={secure}
             />
             <TouchableOpacity onPress={togglePassword}>
-              <Ionicons
-                name={secure ? 'eye-off-outline' : 'eye-outline'}
-                size={24}
-                color="#cba07c"
-              />
+              <Ionicons name={secure ? 'eye-off-outline' : 'eye-outline'} size={24} color="#cba07c" />
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* Botón Entrar */}
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
 
-        {/* Registro */}
         <TouchableOpacity onPress={() => navigation.navigate('Register')}>
           <Text style={styles.footerText}>
             ¿No tienes cuenta? <Text style={styles.footerLink}>Regístrate</Text>
           </Text>
         </TouchableOpacity>
 
-        {/* Olvidaste tu contraseña */}
         <TouchableOpacity
           onPress={() => Alert.alert('Recuperación', 'Función no implementada aún')}
         >
@@ -103,19 +94,14 @@ export default function LoginScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  wrapper: { flex: 1, backgroundColor: '#fff' },
   container: {
     flexGrow: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 40,
   },
-  headerSection: {
-    marginBottom: 36,
-  },
+  headerSection: { marginBottom: 36 },
   title: {
     fontSize: 30,
     fontWeight: '700',
@@ -128,9 +114,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
   },
-  inputGroup: {
-    marginBottom: 22,
-  },
+  inputGroup: { marginBottom: 22 },
   label: {
     fontSize: 16,
     color: '#1c1c1c',
@@ -160,21 +144,14 @@ const styles = StyleSheet.create({
     marginTop: 14,
     marginBottom: 28,
   },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
+  buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
   footerText: {
     fontSize: 15,
     color: '#777',
     textAlign: 'center',
     marginBottom: 10,
   },
-  footerLink: {
-    color: '#00a86b',
-    fontWeight: '600',
-  },
+  footerLink: { color: '#00a86b', fontWeight: '600' },
   forgotText: {
     color: '#00a86b',
     fontSize: 15,
