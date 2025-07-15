@@ -1,9 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import Header from '../components/Header';
 
-export default function PerfilScreen() {
+export default function PerfilScreen({ navigation }) {
   return (
     <View style={styles.container}>
+      <Header navigation={navigation} />
       <Text style={styles.title}>Perfil del Usuario</Text>
       {/* Aquí iría la info del usuario */}
     </View>

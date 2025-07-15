@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import Header from '../components/Header';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -27,14 +28,7 @@ export default function DashboardScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       {/* HEADER CON PERFIL Y LOGOUT */}
-      <View style={styles.headerTop}>
-        <TouchableOpacity onPress={() => navigation.navigate('Perfil')}>
-          <Feather name="user" size={22} color="#A57C36" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.replace('Login')}>
-          <Feather name="log-out" size={22} color="#c0392b" />
-        </TouchableOpacity>
-      </View>
+      <Header navigation={navigation} />
 
       {/* NAV BAR SUPERIOR */}
       <View style={styles.navContainer}>
@@ -107,13 +101,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBFAF7',
     paddingTop: 40,
     paddingHorizontal: 16,
-  },
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingBottom: 10,
   },
   navContainer: {
     flexDirection: 'row',
