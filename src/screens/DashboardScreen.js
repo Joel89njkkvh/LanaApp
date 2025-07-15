@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -26,6 +26,16 @@ export default function DashboardScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
+      {/* HEADER CON PERFIL Y LOGOUT */}
+      <View style={styles.headerTop}>
+        <TouchableOpacity onPress={() => navigation.navigate('Perfil')}>
+          <Feather name="user" size={22} color="#A57C36" />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.replace('Login')}>
+          <Feather name="log-out" size={22} color="#c0392b" />
+        </TouchableOpacity>
+      </View>
+
       {/* NAV BAR SUPERIOR */}
       <View style={styles.navContainer}>
         <TouchableOpacity style={styles.navItem}>
@@ -98,6 +108,13 @@ const styles = StyleSheet.create({
     paddingTop: 40,
     paddingHorizontal: 16,
   },
+  headerTop: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingBottom: 10,
+  },
   navContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -110,11 +127,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDFBF6',
   },
   navItem: {
-  minWidth: 80, // o 90 si aún no cabe
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingHorizontal: 4,
-},
+    minWidth: 80,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 4,
+  },
   navText: {
     fontSize: 13,
     color: '#A57C36',

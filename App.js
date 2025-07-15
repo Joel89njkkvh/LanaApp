@@ -9,6 +9,7 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import TransaccionesScreen from './src/screens/TransaccionesScreen';
 import FinanzasScreen from './src/screens/FinanzasScreen';
 import PresupuestosScreen from './src/screens/PresupuestosScreen';
+import PerfilScreen from './src/screens/PerfilScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -35,25 +36,31 @@ export default function App() {
         <Stack.Screen
           name='Dashboard'
           component={DashboardScreen}
-          options={{title: 'Dashboard'}} 
+          options={{headerShown: false}} 
         />
 
         <Stack.Screen
           name='Transaccion'
           component={TransaccionesScreen}
-          options={{title: 'Transaccion'}} 
+          options={{headerShown: false}} 
         />
 
         <Stack.Screen
           name='Finanzas'
           component={FinanzasScreen}
-          options={{title: 'Finanzas'}} 
+          options={{headerShown: false}} 
         />
 
         <Stack.Screen
           name='Presupuesto'
           component={PresupuestosScreen}
-          options={{title: 'Presupuesto'}} 
+          options={{headerShown: false}} 
+        />
+
+        <Stack.Screen
+          name='Perfil'
+          component={PerfilScreen}
+          options={{headerShown: false}} 
         />
       </Stack.Navigator>
     </NavigationContainer>
