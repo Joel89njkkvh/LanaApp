@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import Header from '../components/Header';
 
 export default function TransaccionesScreen({ navigation }) {
   const transactions = [
@@ -12,6 +13,7 @@ export default function TransaccionesScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
+      <Header navigation={navigation} />
       {/* NAV BAR SUPERIOR */}
       <View style={styles.navContainer}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Dashboard')}>
