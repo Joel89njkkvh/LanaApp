@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import Header from '../components/Header';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -16,7 +17,7 @@ export default function FinanzasScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      {/* NAV BAR SUPERIOR */}
+      <Header navigation={navigation} />
       <View style={styles.navContainer}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Dashboard')}>
           <MaterialCommunityIcons name="speedometer" size={20} color="#A57C36" />

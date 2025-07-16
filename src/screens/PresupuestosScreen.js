@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import Header from '../components/Header';
 
 export default function PresupuestosScreen({ navigation }) {
   const [budgets, setBudgets] = useState([]);
@@ -26,6 +27,7 @@ export default function PresupuestosScreen({ navigation }) {
 
   return (
     <ScrollView style={styles.container}>
+       <Header navigation={navigation} />
       {/* NAV BAR SUPERIOR */}
       <View style={styles.navContainer}>
         <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Dashboard')}>
