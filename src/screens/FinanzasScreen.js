@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
-import { Ionicons, MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import Header from '../components/Header';
+import NavBar from '../components/NavBar';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -18,27 +18,7 @@ export default function FinanzasScreen({ navigation }) {
   return (
     <ScrollView style={styles.container}>
       <Header navigation={navigation} />
-      <View style={styles.navContainer}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Dashboard')}>
-          <MaterialCommunityIcons name="speedometer" size={20} color="#A57C36" />
-          <Text style={styles.navText}>Dashboard</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Transaccion')}>
-          <Feather name="menu" size={20} color="#A57C36" />
-          <Text style={styles.navText}>Transacciones</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Feather name="trending-up" size={20} color="#000" />
-          <Text style={[styles.navText, styles.navActive]}>Finanzas</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Presupuesto')}>
-          <MaterialCommunityIcons name="scale-balance" size={20} color="#A57C36" />
-          <Text style={styles.navText}>Presupuestos</Text>
-        </TouchableOpacity>
-      </View>
+      <NavBar navigation={navigation} active="Finanzas" />
 
       {/* TITULO */}
       <Text style={styles.title}>Estado Financiero</Text>
@@ -83,32 +63,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBFAF7',
     paddingTop: 40,
     paddingHorizontal: 16,
-  },
-  navContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#eee',
-    marginBottom: 20,
-    flexWrap: 'wrap',
-  },
-  navItem: {
-  minWidth: 80, // o 90 si aún no cabe
-  alignItems: 'center',
-  justifyContent: 'center',
-  paddingHorizontal: 4,
-},
-  navText: {
-    fontSize: 13,
-    color: '#A57C36',
-    marginTop: 4,
-    textAlign: 'center',
-  },
-  navActive: {
-    fontWeight: 'bold',
-    color: '#000',
   },
   title: {
     fontSize: 24,
