@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
-
-const screenWidth = Dimensions.get('window').width;
+import Card from '../components/Card';
+import BarChart from '../components/BarChart';
+import globalStyles from '../styles/globalStyles';
 
 export default function DashboardScreen({ navigation }) {
   const [balance, setBalance] = useState(0);
@@ -25,7 +20,7 @@ export default function DashboardScreen({ navigation }) {
   }, []);
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={globalStyles.screen}>
       <Header navigation={navigation} />
        <NavBar navigation={navigation} active="Dashboard" />
       <Text style={styles.title}>Resumen Financiero</Text>
