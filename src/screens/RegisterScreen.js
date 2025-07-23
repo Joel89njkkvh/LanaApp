@@ -24,6 +24,10 @@ export default function RegisterScreen({ navigation }) {
     }
 
     Alert.alert('Registro exitoso', `Bienvenido, ${name}`);
+      navigation.reset({
+      index: 0,
+      routes: [{ name: 'MainTabs' }],
+    });
   };
 
   return (

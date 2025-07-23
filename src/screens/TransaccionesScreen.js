@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Header from '../components/Header';
-import NavBar from '../components/NavBar';
 import Card from '../components/Card';
 import globalStyles from '../styles/globalStyles';
 import colors from '../config/colors';
@@ -17,7 +16,6 @@ export default function TransaccionesScreen({ navigation }) {
   return (
     <ScrollView style={globalStyles.screen}>
       <Header navigation={navigation} />
-      <NavBar navigation={navigation} active="Transaccion" />
       {/* TÍTULO */}
       <Text style={styles.title}>Transacciones - Enero 2025</Text>
 

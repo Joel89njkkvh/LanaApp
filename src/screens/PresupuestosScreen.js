@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Header from '../components/Header';
-import NavBar from '../components/NavBar';
 import ProgressBar from '../components/ProgressBar';
 import globalStyles from '../styles/globalStyles';
 import colors from '../config/colors';
@@ -24,8 +23,6 @@ export default function PresupuestosScreen({ navigation }) {
   return (
     <ScrollView style={globalStyles.screen}>
        <Header navigation={navigation} />
-       <NavBar navigation={navigation} active="Presupuesto" />
-
       <Text style={styles.title}>Mis Presupuestos</Text>
 
       {budgets.map((item, index) => {

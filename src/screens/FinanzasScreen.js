@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import Header from '../components/Header';
-import NavBar from '../components/NavBar';
 import Card from '../components/Card';
 import BarChart from '../components/BarChart';
 import globalStyles from '../styles/globalStyles';
@@ -22,7 +21,6 @@ export default function FinanzasScreen({ navigation }) {
   return (
     <ScrollView style={globalStyles.screen}>
       <Header navigation={navigation} />
-      <NavBar navigation={navigation} active="Finanzas" />
 
       {/* TITULO */}
       <Text style={styles.title}>Estado Financiero</Text>
