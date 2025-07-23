@@ -8,6 +8,7 @@ import {
   Animated,
   Dimensions,
   TouchableWithoutFeedback,
+  Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
@@ -32,6 +33,12 @@ export default function Header({ navigation }) {
     }).start(() => setProfileVisible(false));
   };
 
+  const handleLogout = () => {
+    Alert.alert('Cerrar sesión', '¿Estás seguro de cerrar sesión?', [
+      { text: 'Cancelar', style: 'cancel' },
+      { text: 'Aceptar', onPress: () => navigation.replace('home') },
+    ]);
+  };
   return (
     <View>
       {/* Botones superiores */}
@@ -39,7 +46,7 @@ export default function Header({ navigation }) {
         <TouchableOpacity onPress={openProfile}>
           <Feather name="user" size={22} color="#A57C36" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.replace('Login')}>
+        <TouchableOpacity onPress={handleLogout}>
           <Feather name="log-out" size={22} color="#c0392b" />
         </TouchableOpacity>
       </View>

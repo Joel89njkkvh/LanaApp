@@ -5,8 +5,6 @@ import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
-import PerfilScreen from './src/screens/PerfilScreen';
-
 
 const Stack = createNativeStackNavigator();
 
