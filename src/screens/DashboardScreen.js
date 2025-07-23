@@ -5,6 +5,7 @@ import NavBar from '../components/NavBar';
 import Card from '../components/Card';
 import BarChart from '../components/BarChart';
 import globalStyles from '../styles/globalStyles';
+import colors from '../config/colors';
 
 export default function DashboardScreen({ navigation }) {
   const [balance, setBalance] = useState(0);
@@ -27,50 +28,35 @@ export default function DashboardScreen({ navigation }) {
 
       {/* TARJETAS */}
       <View style={styles.cardGrid}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Saldo Actual</Text>
-          <Text style={styles.cardValue}>${balance}</Text>
-          <Text style={styles.cardChangePositive}>+5%</Text>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Egresos</Text>
-          <Text style={styles.cardValue}>${expenses}</Text>
-          <Text style={styles.cardChangeNegative}>-1%</Text>
-        </View>
-
-        <View style={styles.cardWide}>
-          <Text style={styles.cardTitle}>Ingresos</Text>
-          <Text style={styles.cardValue}>${income}</Text>
-        </View>
-
-        <View style={styles.cardWide}>
-          <Text style={styles.cardTitle}>Ingresos vs Egresos</Text>
-          <Text style={styles.cardValue}>${income - expenses}</Text>
-          <Text style={styles.cardChangePositive}>Este mes +5%</Text>
-        </View>
+        <Card title="Saldo Actual" value={balance} change={5} />
+        <Card
+          title="Egresos"
+          value={expenses}
+          change={-1}
+          valueColor={colors.negative}
+        />
+        <Card title="Ingresos" value={income} wide />
+        <Card
+          title="Ingresos vs Egresos"
+          value={income - expenses}
+          wide
+          change={5}
+        />
       </View>
 
       {/* GRAFICO BARRAS */}
-      <View style={styles.barChart}>
-        {['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'].map((month, index) => (
-          <View key={index} style={styles.barContainer}>
-            <View style={[styles.bar, { height: 80 + index * 4 }]} />
-            <Text style={styles.barLabel}>{month}</Text>
-          </View>
-        ))}
-      </View>
+      <BarChart
+        data={['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'].map((m, i) => ({
+          label: m,
+          value: 80 + i * 4,
+        }))}
+        barColor="#E2DCC8"
+      />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FBFAF7',
-    paddingTop: 40,
-    paddingHorizontal: 16,
-  },
   title: {
     fontSize: 24,
     fontWeight: '700',
@@ -83,64 +69,5 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  card: {
-    width: '48%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  cardWide: {
-    width: '100%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  cardTitle: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 6,
-  },
-  cardValue: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  cardChangePositive: {
-    color: '#27ae60',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  cardChangeNegative: {
-    color: '#c0392b',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  barChart: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginTop: 30,
-    alignItems: 'flex-end',
-    height: 160,
-    backgroundColor: '#fff',
-    paddingVertical: 20,
-    borderRadius: 12,
-    elevation: 2,
-  },
-  barContainer: {
-    alignItems: 'center',
-  },
-  bar: {
-    width: 18,
-    backgroundColor: '#E2DCC8',
-    borderRadius: 4,
-  },
-  barLabel: {
-    marginTop: 6,
-    fontSize: 12,
-    color: '#555',
-  },
+ 
 });

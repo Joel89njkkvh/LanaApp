@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
+import ProgressBar from '../components/ProgressBar';
+import globalStyles from '../styles/globalStyles';
+import colors from '../config/colors';
 
 export default function PresupuestosScreen({ navigation }) {
   const [budgets, setBudgets] = useState([]);
@@ -16,17 +19,10 @@ export default function PresupuestosScreen({ navigation }) {
     setBudgets(mockBudgets);
   }, []);
 
-  const renderBar = (spent, limit) => {
-    const percentage = Math.min((spent / limit) * 100, 100);
-    return (
-      <View style={styles.progressBarBackground}>
-        <View style={[styles.progressBarFill, { width: `${percentage}%` }]} />
-      </View>
-    );
-  };
+  
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={globalStyles.screen}>
        <Header navigation={navigation} />
        <NavBar navigation={navigation} active="Presupuesto" />
 
@@ -43,7 +39,7 @@ export default function PresupuestosScreen({ navigation }) {
             <Text style={isOver ? styles.cardOver : styles.cardRemaining}>
               {isOver ? `Excedido por $${Math.abs(remaining)}` : `Disponible: $${remaining}`}
             </Text>
-            {renderBar(item.spent, item.limit)}
+            <ProgressBar progress={item.spent / item.limit} />
           </View>
         );
       })}
@@ -52,12 +48,6 @@ export default function PresupuestosScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FBFAF7',
-    paddingTop: 40,
-    paddingHorizontal: 16,
-  },
   title: {
     fontSize: 24,
     fontWeight: '700',
@@ -85,22 +75,12 @@ const styles = StyleSheet.create({
   },
   cardRemaining: {
     fontSize: 14,
-    color: '#27ae60',
+    color: colors.positive,
     marginBottom: 8,
   },
   cardOver: {
     fontSize: 14,
-    color: '#c0392b',
+    color: colors.negative,
     marginBottom: 8,
-  },
-  progressBarBackground: {
-    height: 10,
-    backgroundColor: '#E0E0E0',
-    borderRadius: 5,
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    backgroundColor: '#A57C36',
   },
 });

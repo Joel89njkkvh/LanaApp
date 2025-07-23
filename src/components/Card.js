@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import colors from '../config/colors';
 
 export default function Card({ title, value, change, wide, valueColor }) {
   return (
@@ -42,12 +43,12 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   cardChangePositive: {
-    color: '#27ae60',
+    color: colors.positive,
     fontSize: 14,
     marginTop: 4,
   },
   cardChangeNegative: {
-    color: '#c0392b',
+    color: colors.negative,
     fontSize: 14,
     marginTop: 4,
   },

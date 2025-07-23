@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Header from '../components/Header';
 import NavBar from '../components/NavBar';
+import Card from '../components/Card';
+import globalStyles from '../styles/globalStyles';
+import colors from '../config/colors';
 
 export default function TransaccionesScreen({ navigation }) {
   const transactions = [
@@ -12,7 +15,7 @@ export default function TransaccionesScreen({ navigation }) {
   ];
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={globalStyles.screen}>
       <Header navigation={navigation} />
       <NavBar navigation={navigation} active="Transaccion" />
       {/* TÍTULO */}
@@ -20,20 +23,9 @@ export default function TransaccionesScreen({ navigation }) {
 
       {/* TARJETAS RESUMEN */}
       <View style={styles.cardGrid}>
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Ingresos</Text>
-          <Text style={[styles.cardValue, { color: '#27ae60' }]}>$2,000.00</Text>
-        </View>
-
-        <View style={styles.card}>
-          <Text style={styles.cardTitle}>Egresos</Text>
-          <Text style={[styles.cardValue, { color: '#c0392b' }]}>$1,500.00</Text>
-        </View>
-
-        <View style={styles.cardWide}>
-          <Text style={styles.cardTitle}>Saldo</Text>
-          <Text style={styles.cardValue}>$500.00</Text>
-        </View>
+        <Card title="Ingresos" value={2000} valueColor={colors.positive} />
+        <Card title="Egresos" value={1500} valueColor={colors.negative} />
+        <Card title="Saldo" value={500} wide />
       </View>
 
       {/* LISTA DE TRANSACCIONES */}
@@ -67,12 +59,6 @@ export default function TransaccionesScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#FBFAF7',
-    paddingTop: 40,
-    paddingHorizontal: 16,
-  },
   title: {
     fontSize: 24,
     fontWeight: '700',
@@ -85,32 +71,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
-  card: {
-    width: '48%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  cardWide: {
-    width: '100%',
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-    elevation: 2,
-  },
-  cardTitle: {
-    fontSize: 14,
-    color: '#333',
-    marginBottom: 6,
-  },
-  cardValue: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-  },
+  
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
@@ -139,12 +100,12 @@ const styles = StyleSheet.create({
   },
   transactionTypeIn: {
     fontSize: 13,
-    color: '#27ae60',
+    color: colors.positive,
     marginTop: 2,
   },
   transactionTypeOut: {
     fontSize: 13,
-    color: '#c0392b',
+    color: colors.negative,
     marginTop: 2,
   },
   transactionAmount: {
@@ -154,7 +115,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   button: {
-    backgroundColor: '#A57C36',
+    backgroundColor: colors.primary,
     paddingVertical: 14,
     borderRadius: 24,
     alignItems: 'center',

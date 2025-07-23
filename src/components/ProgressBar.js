@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import colors from '../config/colors';
 
 export default function ProgressBar({ progress }) {
   const percentage = Math.min(Math.max(progress, 0), 1) * 100;
@@ -19,6 +20,6 @@ const styles = StyleSheet.create({
   },
   fill: {
     height: '100%',
-    backgroundColor: '#A57C36',
+    backgroundColor: colors.primary,
   },
 });

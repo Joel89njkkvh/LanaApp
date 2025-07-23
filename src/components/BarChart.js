@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import colors from '../config/colors';
 
-export default function BarChart({ data, barColor = '#A57C36' }) {
+export default function BarChart({ data, barColor = colors.primary }) {
   return (
     <View style={styles.barChart}>
       {data.map(({ label, value }, index) => (
