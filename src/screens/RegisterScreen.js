@@ -11,23 +11,35 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import api from '../api'; // 👈 asegúrate que esta ruta sea correcta
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!name || !email || !password) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
     }
 
-    Alert.alert('Registro exitoso', `Bienvenido, ${name}`);
+    try {
+      const response = await api.post('/auth/registro', {
+        nombre: name,
+        correo: email,
+        contraseña: password,
+      });
+
+      Alert.alert('Registro exitoso', `Bienvenido, ${response.data.nombre}`);
       navigation.reset({
-      index: 0,
-      routes: [{ name: 'MainTabs' }],
-    });
+        index: 0,
+        routes: [{ name: 'MainTabs' }],
+      });
+    } catch (error) {
+      console.error('Error en el registro:', error.response?.data || error.message);
+      Alert.alert('Error', 'No se pudo registrar el usuario');
+    }
   };
 
   return (
@@ -36,13 +48,11 @@ export default function RegisterScreen({ navigation }) {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
     >
       <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
-        {/* Encabezado */}
         <View style={styles.headerSection}>
           <Text style={styles.title}>Crea tu cuenta</Text>
           <Text style={styles.subtitle}>Únete a LanaApp</Text>
         </View>
 
-        {/* Nombre */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Nombre completo</Text>
           <View style={styles.inputRow}>
@@ -57,7 +67,6 @@ export default function RegisterScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Correo */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Correo electrónico</Text>
           <View style={styles.inputRow}>
@@ -74,7 +83,6 @@ export default function RegisterScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Contraseña */}
         <View style={styles.inputGroup}>
           <Text style={styles.label}>Contraseña</Text>
           <View style={styles.inputRow}>
@@ -90,12 +98,10 @@ export default function RegisterScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Botón de registro */}
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
           <Text style={styles.buttonText}>Registrarme</Text>
         </TouchableOpacity>
 
-        {/* Ya tienes cuenta */}
         <TouchableOpacity onPress={() => navigation.navigate('Login')}>
           <Text style={styles.footerText}>
             ¿Ya tienes cuenta? <Text style={styles.footerLink}>Inicia sesión</Text>
@@ -107,19 +113,14 @@ export default function RegisterScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  wrapper: { flex: 1, backgroundColor: '#fff' },
   container: {
     flexGrow: 1,
     paddingHorizontal: 24,
     paddingTop: 60,
     paddingBottom: 40,
   },
-  headerSection: {
-    marginBottom: 36,
-  },
+  headerSection: { marginBottom: 36 },
   title: {
     fontSize: 30,
     fontWeight: '700',
@@ -132,9 +133,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#666',
   },
-  inputGroup: {
-    marginBottom: 22,
-  },
+  inputGroup: { marginBottom: 22 },
   label: {
     fontSize: 16,
     color: '#1c1c1c',
