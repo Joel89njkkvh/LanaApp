@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -9,16 +9,30 @@ import {
   ScrollView,
   Dimensions,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
+import api from '../api'; 
 
 const { height, width } = Dimensions.get('window');
 const HEADER_HEIGHT = height * 0.45;
 
 export default function WelcomeScreen({ navigation }) {
+  const [mensajeApi, setMensajeApi] = useState('');
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    api.get('/')
+      .then(res => setMensajeApi(res.data.mensaje))
+      .catch(err => {
+        console.error('Error al conectar con la API:', err.message);
+        setMensajeApi('Error al conectar con la API');
+      })
+      .finally(() => setCargando(false));
+  }, []);
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      
-      {/* Imagen de fondo con overlay y contenido de bienvenida */}
+
       <ImageBackground
         source={require('../assets/fondo.png')}
         style={[styles.header, { height: HEADER_HEIGHT }]}
@@ -31,7 +45,6 @@ export default function WelcomeScreen({ navigation }) {
               Gestión financiera inteligente y sencilla para todos.
             </Text>
 
-            {/* Botones de navegación */}
             <View style={styles.buttonRow}>
               <TouchableOpacity
                 style={styles.primaryButton}
@@ -47,11 +60,17 @@ export default function WelcomeScreen({ navigation }) {
                 <Text style={styles.secondaryText}>Inicia sesión</Text>
               </TouchableOpacity>
             </View>
+
+            {/* Mensaje de la API */}
+            {cargando ? (
+              <ActivityIndicator color="#fff" style={{ marginTop: 20 }} />
+            ) : (
+              <Text style={styles.apiMessage}>{mensajeApi}</Text>
+            )}
           </View>
         </View>
       </ImageBackground>
 
-      {/* Estadísticas o testimonios */}
       <View style={styles.statsRow}>
         <View style={styles.statCard}>
           <Text style={styles.statTitle}>Usuarios satisfechos</Text>
@@ -64,7 +83,6 @@ export default function WelcomeScreen({ navigation }) {
         </View>
       </View>
 
-      {/* Imagen inferior decorativa */}
       <Image
         source={require('../assets/finanzas.jpg')}
         style={styles.bottomImage}
@@ -113,7 +131,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     flexWrap: 'wrap',
-    gap: 12, 
+    gap: 12,
   },
   primaryButton: {
     backgroundColor: '#00a86b',
@@ -179,5 +197,11 @@ const styles = StyleSheet.create({
   bottomImage: {
     width: '100%',
     height: height * 0.38,
+  },
+  apiMessage: {
+    marginTop: 20,
+    color: '#fff',
+    fontSize: 14,
+    textAlign: 'center',
   },
 });
