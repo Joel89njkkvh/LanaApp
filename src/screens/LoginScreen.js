@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import {  View,
+import {
+  View,
   Text,
   TextInput,
   TouchableOpacity,
@@ -10,6 +11,7 @@ import {  View,
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import api from '../api'; 
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -18,15 +20,31 @@ export default function LoginScreen({ navigation }) {
 
   const togglePassword = () => setSecure(!secure);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email || !password) {
       Alert.alert('Error', 'Por favor completa todos los campos');
       return;
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'MainTabs' }],
-    });
+
+    try {
+      const response = await api.post('/auth/login', {
+        correo: email,
+        contraseña: password,
+      });
+
+      const usuario = response.data;
+      console.log('Usuario autenticado:', usuario);
+
+      Alert.alert('Bienvenido', `${usuario.nombre}`);
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' }],
+      });
+    } catch (error) {
+      console.error('Login error:', error.response?.data || error.message);
+      Alert.alert('Error', 'Credenciales inválidas');
+    }
   };
 
   return (
