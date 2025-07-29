@@ -11,6 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
 
 export default function Header({ navigation }) {
   const [profileVisible, setProfileVisible] = useState(false);
@@ -33,10 +34,11 @@ export default function Header({ navigation }) {
     }).start(() => setProfileVisible(false));
   };
 
+  const { logout } = useAuth();
   const handleLogout = () => {
     Alert.alert('Cerrar sesión', '¿Estás seguro de cerrar sesión?', [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Aceptar', onPress: () => navigation.replace('home') },
+      { text: 'Aceptar', onPress: () => logout() },
     ]);
   };
   return (

@@ -180,37 +180,66 @@ export default function AgregarTransaccionScreen({ navigation, route }) {
     }
   };
 
+  const handleGoBack = () => {
+    // Regresar al Tab Navigator donde está TransaccionesScreen
+    try {
+      const parentNavigator = navigation.getParent();
+      if (parentNavigator) {
+        parentNavigator.goBack();
+      } else {
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+      navigation.goBack();
+    }
+  };
+
   const isFormValid = () => {
+    return (
+      form.usuario_id &&
+      form.monto && 
+      !isNaN(parseFloat(form.monto)) && 
+      parseFloat(form.monto) > 0 &&
+      form.categoria_id &&
+      ['ingreso', 'egreso'].includes(form.tipo) &&
+      form.fecha &&
+      (!form.descripcion || form.descripcion.length <= 200)
+    );
+  };
+
+  const validateAndSubmit = () => {
     if (!form.usuario_id) {
       Alert.alert('Error', 'Error de autenticación. No se pudo verificar su identidad.');
-      return false;
+      return;
     }
     if (!form.monto || isNaN(parseFloat(form.monto)) || parseFloat(form.monto) <= 0) {
       Alert.alert('Error', 'Ingrese un monto válido mayor a 0.');
-      return false;
+      return;
     }
     if (!form.categoria_id) {
       Alert.alert('Error', 'Seleccione una categoría.');
-      return false;
+      return;
     }
     if (!['ingreso', 'egreso'].includes(form.tipo)) {
       Alert.alert('Error', 'Tipo de transacción inválido.');
-      return false;
+      return;
     }
     if (!form.fecha) {
       Alert.alert('Error', 'Seleccione una fecha válida.');
-      return false;
+      return;
     }
     if (form.descripcion && form.descripcion.length > 200) {
       Alert.alert('Error', 'La descripción no puede exceder 200 caracteres.');
-      return false;
+      return;
     }
-    return true;
+    
+    // Si todas las validaciones pasan, ejecutar el submit
+    handleSubmit();
   };
 
   const handleSubmit = async () => {
     Keyboard.dismiss();
-    if (!isFormValid()) return;
 
     try {
       setLoading(true);
@@ -233,18 +262,34 @@ export default function AgregarTransaccionScreen({ navigation, route }) {
         const { usuario_id, ...dataParaEnviar } = transactionData;
         resultado = await createTransaction(usuario_id, dataParaEnviar);
       }
-      if (resultado && resultado.success) {
-        const mensaje = isEdit
-          ? 'La transacción fue actualizada correctamente.'
-          : 'La transacción fue creada exitosamente.';
 
-        Alert.alert('Éxito', mensaje, [
-          {
-            text: 'OK',
-            onPress: () => navigation.navigate('TransaccionesScreen'),
+      // Mostrar alert de éxito independientemente de la estructura de la respuesta
+      const mensaje = isEdit
+        ? 'La transacción fue actualizada correctamente.'
+        : 'La transacción fue creada exitosamente.';
+
+      console.log('Resultado de la transacción:', resultado); // Para debug
+
+      Alert.alert('Éxito', mensaje, [
+        {
+          text: 'OK',
+          onPress: () => {
+            // Regresar al Tab Navigator donde está TransaccionesScreen
+            try {
+              const parentNavigator = navigation.getParent();
+              if (parentNavigator) {
+                parentNavigator.goBack();
+              } else {
+                navigation.goBack();
+              }
+            } catch (error) {
+              console.error('Navigation error:', error);
+              navigation.goBack();
+            }
           },
-        ]);
-      }
+        },
+      ]);
+
     } catch (error) {
       console.error('Error en handleSubmit:', error);
       let mensajeError = 'Error al procesar la transacción.';
@@ -277,6 +322,13 @@ export default function AgregarTransaccionScreen({ navigation, route }) {
         contentContainerStyle={styles.container}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Header con botón de regreso */}
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleGoBack} style={styles.backButton}>
+            <Text style={styles.backButtonText}>← Regresar</Text>
+          </TouchableOpacity>
+        </View>
+
         <Text style={styles.title}>
           {isEdit ? 'Editar Transacción' : 'Agregar Nueva Transacción'}
         </Text>
@@ -368,9 +420,9 @@ export default function AgregarTransaccionScreen({ navigation, route }) {
         </View>
 
         <TouchableOpacity
-          style={[styles.button, (!isFormValid() || loading) && styles.buttonDisabled]}
-          onPress={handleSubmit}
-          disabled={!isFormValid() || loading}
+          style={[styles.button, !isFormValid() && styles.buttonDisabled]}
+          onPress={validateAndSubmit}
+          disabled={loading}
         >
           {loading ? (
             <ActivityIndicator color="#fff" size="small" />
@@ -399,6 +451,22 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: colors.dark,
+  },
+  header: {
+    marginBottom: 20,
+    paddingTop: 10,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    backgroundColor: colors.light,
+  },
+  backButtonText: {
+    fontSize: 16,
+    color: colors.primary,
+    fontWeight: '600',
   },
   title: {
     fontSize: 24,

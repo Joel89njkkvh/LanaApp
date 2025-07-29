@@ -20,34 +20,34 @@ export default function TransaccionesScreen({ navigation }) {
   const [loading, setLoading] = useState(true);
 
   const fetchTransactions = async () => {
-  try {
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    const usuarioId = await AsyncStorage.getItem('usuario_id');
-    const nombre = await AsyncStorage.getItem('nombre');
-    const correo = await AsyncStorage.getItem('correo');
+      const usuarioId = await AsyncStorage.getItem('usuario_id');
+      const nombre = await AsyncStorage.getItem('nombre');
+      const correo = await AsyncStorage.getItem('correo');
 
-    if (!usuarioId) {
-      console.error('⚠️ No se encontró usuario_id en AsyncStorage');
-      return;
+      if (!usuarioId) {
+        console.error('⚠️ No se encontró usuario_id en AsyncStorage');
+        return;
+      }
+
+      const user = {
+        usuario_id: usuarioId,
+        nombre,
+        correo,
+      };
+
+      console.log('✅ Usuario cargado correctamente:', user);
+
+      const response = await getTransactions(usuarioId);
+      setTransactions(response.data);
+    } catch (error) {
+      console.error('❌ Error al obtener transacciones:', error.response?.data || error.message);
+    } finally {
+      setLoading(false);
     }
-
-    const user = {
-      usuario_id: usuarioId,
-      nombre,
-      correo,
-    };
-
-    console.log('✅ Usuario cargado correctamente:', user);
-
-    const response = await getTransactions(usuarioId); // 👈 Usa el ID correcto
-    setTransactions(response.data);
-  } catch (error) {
-    console.error('❌ Error al obtener transacciones:', error.response?.data || error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleDelete = async (transaccion_id) => {
     Alert.alert('Eliminar', '¿Seguro que deseas eliminar esta transacción?', [
@@ -67,6 +67,22 @@ export default function TransaccionesScreen({ navigation }) {
         },
       },
     ]);
+  };
+
+  const handleNavigateToAdd = (transaction = null) => {
+    try {
+      // Navegar al Stack Navigator padre desde el Tab Navigator
+      const parentNavigator = navigation.getParent();
+      if (parentNavigator) {
+        parentNavigator.navigate('AgregarTransaccion', { transaction });
+      } else {
+        // Fallback si no se puede acceder al padre
+        navigation.navigate('AgregarTransaccion', { transaction });
+      }
+    } catch (error) {
+      console.error('Navigation error:', error);
+      Alert.alert('Error', 'No se pudo navegar a la pantalla de agregar transacción');
+    }
   };
 
   useEffect(() => {
@@ -108,7 +124,7 @@ export default function TransaccionesScreen({ navigation }) {
               key={tx.transaccion_id || tx.id}
               style={styles.transactionItem}
               onLongPress={() => handleDelete(tx.transaccion_id || tx.id)}
-              onPress={() => navigation.navigate('AgregarTransaccion', { transaction: tx })}
+              onPress={() => handleNavigateToAdd(tx)}
             >
               <View>
                 <Text style={styles.transactionDate}>
@@ -132,7 +148,7 @@ export default function TransaccionesScreen({ navigation }) {
 
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => navigation.navigate('AgregarTransaccion')}
+        onPress={() => handleNavigateToAdd()}
       >
         <Text style={styles.addButtonText}>+ Agregar transacción</Text>
       </TouchableOpacity>

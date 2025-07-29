@@ -1,9 +1,8 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator, Alert } from 'react-native';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
-
 import AgregarTransaccionScreen from './src/screens/AgregarTransaccionScreen';
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
@@ -16,11 +15,18 @@ const AppContent = () => {
   const { user, loading, error, clearError, setNavigation } = useAuth();
   const navigationRef = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (error) {
       Alert.alert('Error', error, [{ text: 'OK', onPress: clearError }]);
     }
   }, [error, clearError]);
+
+  // Pasar la referencia de navegación al contexto cuando esté lista
+  useEffect(() => {
+    if (navigationRef.current && setNavigation) {
+      setNavigation(navigationRef.current);
+    }
+  }, [setNavigation]);
 
   if (loading) {
     return (
@@ -32,9 +38,12 @@ const AppContent = () => {
 
   return (
     <NavigationContainer
-      ref={(ref) => {
-        navigationRef.current = ref;
-        setNavigation(ref); // Enviar navegación al contexto
+      ref={navigationRef}
+      onReady={() => {
+        // Asegurar que la navegación se pase cuando esté lista
+        if (setNavigation) {
+          setNavigation(navigationRef.current);
+        }
       }}
     >
       <Stack.Navigator
@@ -42,18 +51,21 @@ const AppContent = () => {
         initialRouteName={user ? "MainTabs" : "Home"}
       >
         {user ? (
+          // Navegación para usuarios autenticados
           <>
             <Stack.Screen name="MainTabs" component={MainTabNavigator} />
             <Stack.Screen
               name="AgregarTransaccion"
               component={AgregarTransaccionScreen}
-              options={{
-                presentation: 'modal',
+              options={{ 
+                presentation: 'modal', 
                 headerShown: false,
+                animation: 'slide_from_bottom'
               }}
             />
           </>
         ) : (
+          // Navegación para usuarios no autenticados
           <>
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />

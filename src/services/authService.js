@@ -13,8 +13,8 @@ export const login = async (email, password) => {
       data: {
         id: response.data.id,
         nombre: response.data.nombre,
-        correo: response.data.correo,
-        token: response.data.token
+        correo: response.data.correo
+        // ❌ Eliminado: token: response.data.token (no existe en tu API)
       }
     };
   } catch (error) {
@@ -25,12 +25,12 @@ export const login = async (email, password) => {
   }
 };
 
-export const register = async (name, email, password) => {
+export const register = async (userData) => {
   try {
-    const response = await api.post('/auth/register', {
-      nombre: name,
-      correo: email,
-      contraseña: password
+    const response = await api.post('/auth/registro', { // ← Nota: cambié a '/auth/registro' para coincidir con tu LoginScreen
+      nombre: userData.nombre,
+      correo: userData.correo,
+      contraseña: userData.contraseña
     });
     
     return {
@@ -38,8 +38,8 @@ export const register = async (name, email, password) => {
       data: {
         id: response.data.id,
         nombre: response.data.nombre,
-        correo: response.data.correo,
-        token: response.data.token
+        correo: response.data.correo
+        // ❌ Eliminado: token: response.data.token (no existe en tu API)
       }
     };
   } catch (error) {

@@ -8,12 +8,11 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [navigationRef, setNavigationRef] = useState(null);
   const [error, setError] = useState(null);
 
-  // Interceptores de axios para manejo global de errores
+  // Interceptores de axios para manejo global de errores (sin autenticación por token)
   useEffect(() => {
     const requestInterceptor = api.interceptors.request.use(config => {
       setError(null);
@@ -24,9 +23,7 @@ export const AuthProvider = ({ children }) => {
       response => response,
       err => {
         setError(err.message);
-        if (err.response?.status === 401) {
-          logout();
-        }
+        // No manejamos logout automático por 401 ya que no usamos tokens
         return Promise.reject(err);
       }
     );
@@ -40,17 +37,20 @@ export const AuthProvider = ({ children }) => {
   // Cargar datos de sesión al iniciar app
   const loadSession = useCallback(async () => {
     try {
-      const [storedUser, storedToken] = await Promise.all([
-        AsyncStorage.getItem('user'),
-        AsyncStorage.getItem('token')
-      ]);
+      const storedUser = await AsyncStorage.getItem('user');
 
-      if (storedUser && storedToken) {
+      if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
-        setToken(storedToken);
-        api.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
-        console.log('✅ Usuario cargado correctamente desde AsyncStorage:', parsedUser);
+        
+        // Guardar datos adicionales para compatibilidad
+        await Promise.all([
+          AsyncStorage.setItem('usuario_id', parsedUser.id.toString()),
+          AsyncStorage.setItem('nombre', parsedUser.nombre),
+          AsyncStorage.setItem('correo', parsedUser.correo)
+        ]);
+        
+        console.log('✅ Usuario autenticado:', parsedUser);
       }
     } catch (error) {
       console.error('Error loading session:', error);
@@ -64,9 +64,16 @@ export const AuthProvider = ({ children }) => {
     loadSession();
   }, [loadSession]);
 
-  // Guardar datos tras login o registro
+  // Guardar datos tras login o registro (sin token)
   const setAuthData = useCallback(async (data) => {
     try {
+      console.log('📝 Datos recibidos en setAuthData:', data);
+
+      // Validar que los datos requeridos estén presentes
+      if (!data.id || !data.nombre || !data.correo) {
+        throw new Error('Datos de usuario incompletos');
+      }
+
       const userData = {
         id: data.id,
         nombre: data.nombre,
@@ -74,15 +81,16 @@ export const AuthProvider = ({ children }) => {
       };
 
       setUser(userData);
-      setToken(data.token);
 
+      // Guardar datos del usuario (sin token)
       await Promise.all([
         AsyncStorage.setItem('user', JSON.stringify(userData)),
-        AsyncStorage.setItem('token', data.token)
+        AsyncStorage.setItem('usuario_id', userData.id.toString()),
+        AsyncStorage.setItem('nombre', userData.nombre),
+        AsyncStorage.setItem('correo', userData.correo)
       ]);
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
-      console.log('✅ Usuario autenticado y guardado:', userData);
+      console.log('✅ Usuario autenticado:', userData);
     } catch (error) {
       console.error('Error setting auth data:', error);
       setError('Error al guardar los datos de autenticación');
@@ -96,7 +104,11 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       setError(null);
 
+      console.log('🔄 Intentando login con:', { email, password: '***' });
+
       const result = await authService.login(email, password);
+      
+      console.log('📥 Respuesta del servicio de login:', result);
 
       if (!result.success) {
         setError(result.error || 'Error en el login');
@@ -109,7 +121,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Login error:', error);
       const errorMsg = error.isAxiosError && !error.response
         ? 'Error de conexión. Verifica tu red.'
-        : error.response?.data?.message || 'Error en el servidor';
+        : error.response?.data?.message || error.message || 'Error en el servidor';
 
       setError(errorMsg);
       return { success: false, error: errorMsg };
@@ -120,36 +132,38 @@ export const AuthProvider = ({ children }) => {
 
   // Cerrar sesión
   const logout = useCallback(async () => {
-    try {
-      setLoading(true);
-      await AsyncStorage.multiRemove(['user', 'token']);
-      setUser(null);
-      setToken(null);
-      delete api.defaults.headers.common['Authorization'];
+  try {
+    setLoading(true);
 
-      if (navigationRef?.current) {
-        navigationRef.current.dispatch(
-          CommonActions.reset({
-            index: 0,
-            routes: [{ name: 'Login' }],
-          })
-        );
-      }
-    } catch (error) {
-      console.error('Logout error:', error);
-      setError('Error al cerrar sesión');
-    } finally {
-      setLoading(false);
-    }
-  }, [navigationRef]);
+    await AsyncStorage.multiRemove([
+      'user', 
+      'usuario_id', 
+      'nombre', 
+      'correo'
+    ]);
 
+    setUser(null);
+
+    // Eliminar navegación manual aquí
+
+  } catch (error) {
+    console.error('Logout error:', error);
+    setError('Error al cerrar sesión');
+  } finally {
+    setLoading(false);
+  }
+}, []);
   // Registro de usuario
   const register = useCallback(async (userData) => {
     try {
       setLoading(true);
       setError(null);
 
+      console.log('🔄 Intentando registro con:', { ...userData, contraseña: '***' });
+
       const result = await authService.register(userData);
+      
+      console.log('📥 Respuesta del servicio de registro:', result);
 
       if (!result.success) {
         setError(result.error || 'Error en el registro');
@@ -162,7 +176,7 @@ export const AuthProvider = ({ children }) => {
       console.error('Register error:', error);
       const errorMsg = error.isAxiosError && !error.response
         ? 'Error de conexión. Verifica tu red.'
-        : error.response?.data?.message || 'Error en el servidor';
+        : error.response?.data?.message || error.message || 'Error en el servidor';
 
       setError(errorMsg);
       return { success: false, error: errorMsg };
@@ -173,7 +187,6 @@ export const AuthProvider = ({ children }) => {
 
   const value = {
     user,
-    token,
     loading,
     error,
     login,

@@ -19,7 +19,7 @@ export default function MainTabNavigator() {
         tabBarStyle: { 
           backgroundColor: colors.background,
           borderTopWidth: 0,
-          elevation: 0
+          elevation: 0,
         },
       }}
     >
@@ -27,17 +27,17 @@ export default function MainTabNavigator() {
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="speedometer" color={color} size={24} />
           ),
           tabBarLabel: 'Dashboard',
         }}
       />
       <Tab.Screen
-        name="Transacciones"  // Cambiado de "Transaccion" a "Transacciones"
+        name="Transacciones"
         component={TransaccionesScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="dollar-sign" color={color} size={24} />
           ),
           tabBarLabel: 'Transacciones',
@@ -47,22 +47,18 @@ export default function MainTabNavigator() {
         name="Finanzas"
         component={FinanzasScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color }) => (
             <Feather name="trending-up" color={color} size={24} />
           ),
           tabBarLabel: 'Finanzas',
         }}
       />
       <Tab.Screen
-        name="Presupuestos"  // Cambiado de "Presupuesto" a "Presupuestos"
+        name="Presupuestos"
         component={PresupuestosScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons 
-              name="wallet-outline" 
-              color={color} 
-              size={24} 
-            />
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="wallet-outline" color={color} size={24} />
           ),
           tabBarLabel: 'Presupuestos',
         }}
