@@ -14,9 +14,13 @@ export default function MainTabNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: colors.primary,
-        tabBarStyle: { backgroundColor: colors.background },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarStyle: { 
+          backgroundColor: colors.background,
+          borderTopWidth: 0,
+          elevation: 0
+        },
       }}
     >
       <Tab.Screen
@@ -24,19 +28,19 @@ export default function MainTabNavigator() {
         component={DashboardScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="speedometer" color={color} size={size} />
+            <MaterialCommunityIcons name="speedometer" color={color} size={24} />
           ),
-          title: 'Dashboard',
+          tabBarLabel: 'Dashboard',
         }}
       />
       <Tab.Screen
-        name="Transaccion"
+        name="Transacciones"  // Cambiado de "Transaccion" a "Transacciones"
         component={TransaccionesScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Feather name="menu" color={color} size={size} />
+            <Feather name="dollar-sign" color={color} size={24} />
           ),
-          title: 'Transacciones',
+          tabBarLabel: 'Transacciones',
         }}
       />
       <Tab.Screen
@@ -44,19 +48,23 @@ export default function MainTabNavigator() {
         component={FinanzasScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <Feather name="trending-up" color={color} size={size} />
+            <Feather name="trending-up" color={color} size={24} />
           ),
-          title: 'Finanzas',
+          tabBarLabel: 'Finanzas',
         }}
       />
       <Tab.Screen
-        name="Presupuesto"
+        name="Presupuestos"  // Cambiado de "Presupuesto" a "Presupuestos"
         component={PresupuestosScreen}
         options={{
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="scale-balance" color={color} size={size} />
+            <MaterialCommunityIcons 
+              name="wallet-outline" 
+              color={color} 
+              size={24} 
+            />
           ),
-          title: 'Presupuestos',
+          tabBarLabel: 'Presupuestos',
         }}
       />
     </Tab.Navigator>
