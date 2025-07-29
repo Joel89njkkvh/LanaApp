@@ -6,9 +6,9 @@ let baseURL = '';
 
 // Detectar entorno
 if (Platform.OS === 'web') {
-  baseURL = 'http://localhost:8000'; 
+  baseURL = 'http://localhost:5002';
 } else {
-  baseURL = 'http://10.16.38.19:8000'; 
+  baseURL = 'http://192.168.1.19:5002';
 }
 
 const api = axios.create({

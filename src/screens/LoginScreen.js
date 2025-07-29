@@ -11,7 +11,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../api'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from '../api';
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
@@ -33,7 +34,15 @@ export default function LoginScreen({ navigation }) {
       });
 
       const usuario = response.data;
-      console.log('Usuario autenticado:', usuario);
+      console.log('✅ Usuario autenticado:', usuario);
+
+      // Limpiar sesión anterior antes de guardar nueva
+      await AsyncStorage.multiRemove(['usuario_id', 'nombre', 'correo']);
+
+      // Guardar usuario actual en AsyncStorage
+      await AsyncStorage.setItem('usuario_id', String(usuario.id));
+      await AsyncStorage.setItem('nombre', usuario.nombre);
+      await AsyncStorage.setItem('correo', usuario.correo);
 
       Alert.alert('Bienvenido', `${usuario.nombre}`);
 
@@ -42,7 +51,7 @@ export default function LoginScreen({ navigation }) {
         routes: [{ name: 'MainTabs' }],
       });
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
+      console.error('❌ Error en login:', error.response?.data || error.message);
       Alert.alert('Error', 'Credenciales inválidas');
     }
   };
@@ -101,9 +110,7 @@ export default function LoginScreen({ navigation }) {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => Alert.alert('Recuperación', 'Función no implementada aún')}
-        >
+        <TouchableOpacity onPress={() => Alert.alert('Recuperación', 'Función no implementada aún')}>
           <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
       </ScrollView>
