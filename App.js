@@ -4,6 +4,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { View, ActivityIndicator, Alert } from 'react-native';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import AgregarTransaccionScreen from './src/screens/AgregarTransaccionScreen';
+import PresupuestosScreen from './src/screens/PresupuestosScreen';
+import BudgetFormScreen from './src/screens/BudgetFormScreen'; // Importar el formulario
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -60,6 +62,29 @@ const AppContent = () => {
               options={{ 
                 presentation: 'modal', 
                 headerShown: false,
+                animation: 'slide_from_bottom'
+              }}
+            />
+            {/* Pantallas de Presupuestos */}
+            <Stack.Screen
+              name="CreateBudget"
+              component={BudgetFormScreen}
+              options={{
+                headerShown: true,
+                title: 'Nuevo Presupuesto',
+                headerBackTitle: 'Volver',
+                presentation: 'modal',
+                animation: 'slide_from_bottom'
+              }}
+            />
+            <Stack.Screen
+              name="EditBudget"
+              component={BudgetFormScreen}
+              options={{
+                headerShown: true,
+                title: 'Editar Presupuesto',
+                headerBackTitle: 'Volver',
+                presentation: 'modal',
                 animation: 'slide_from_bottom'
               }}
             />
