@@ -5,7 +5,8 @@ import { View, ActivityIndicator, Alert } from 'react-native';
 import { AuthProvider, useAuth } from './src/context/AuthContext';
 import AgregarTransaccionScreen from './src/screens/AgregarTransaccionScreen';
 import PresupuestosScreen from './src/screens/PresupuestosScreen';
-import BudgetFormScreen from './src/screens/BudgetFormScreen'; // Importar el formulario
+import BudgetFormScreen from './src/screens/BudgetFormScreen';
+import PagoFormScreen from './src/screens/PagoFormScreen'; // Nueva importación
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
@@ -56,15 +57,18 @@ const AppContent = () => {
           // Navegación para usuarios autenticados
           <>
             <Stack.Screen name="MainTabs" component={MainTabNavigator} />
+            
+            {/* Pantalla de Agregar Transacción */}
             <Stack.Screen
               name="AgregarTransaccion"
               component={AgregarTransaccionScreen}
-              options={{ 
-                presentation: 'modal', 
+              options={{
+                presentation: 'modal',
                 headerShown: false,
                 animation: 'slide_from_bottom'
               }}
             />
+            
             {/* Pantallas de Presupuestos */}
             <Stack.Screen
               name="CreateBudget"
@@ -83,6 +87,19 @@ const AppContent = () => {
               options={{
                 headerShown: true,
                 title: 'Editar Presupuesto',
+                headerBackTitle: 'Volver',
+                presentation: 'modal',
+                animation: 'slide_from_bottom'
+              }}
+            />
+            
+            {/* Pantalla de Crear/Editar Pago */}
+            <Stack.Screen
+              name="CreatePayment"
+              component={PagoFormScreen}
+              options={{
+                headerShown: true,
+                title: 'Nuevo Pago',
                 headerBackTitle: 'Volver',
                 presentation: 'modal',
                 animation: 'slide_from_bottom'
