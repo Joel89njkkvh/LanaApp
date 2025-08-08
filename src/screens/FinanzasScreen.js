@@ -6,9 +6,9 @@ import Card from '../components/Card';
 import MiniLineChart from '../components/MiniLineChart';
 import globalStyles from '../styles/globalStyles';
 import colors from '../config/colors';
+import { API_BASE_URL } from '../config/apiConfig';
 
 const screenWidth = Dimensions.get('window').width;
-const API_BASE_URL = 'http://192.168.1.19:5002';
 
 export default function FinanzasScreen({ navigation, route }) {
   const [financialData, setFinancialData] = useState({

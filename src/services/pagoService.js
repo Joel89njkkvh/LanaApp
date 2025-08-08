@@ -1,5 +1,5 @@
 // services/pagosService.js
-const API_BASE_URL = 'http://10.16.33.38:8000';
+import { API_BASE_URL } from '../config/apiConfig';
 
 class PagosService {
   

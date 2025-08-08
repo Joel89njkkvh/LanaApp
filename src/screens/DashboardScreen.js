@@ -6,8 +6,7 @@ import Card from '../components/Card';
 import SimpleDonutChart from '../components/SimpleDonutChart';
 import globalStyles from '../styles/globalStyles';
 import colors from '../config/colors';
-
-const API_BASE_URL = 'http://10.16.33.38:8000';
+import { API_BASE_URL } from '../config/apiConfig';
 
 export default function DashboardScreen({ navigation, route }) {
   const [financialData, setFinancialData] = useState({
