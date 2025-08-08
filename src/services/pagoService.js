@@ -2,7 +2,7 @@
 const API_BASE_URL = 'http://192.168.1.19:5002';
 
 class PagosService {
-  // Mapeo de nombres a IDs para consistencia
+  
   getCategoryIdByName(nombre) {
     const categoryMapping = {
       'Alimentos': 1,
