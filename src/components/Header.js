@@ -57,9 +57,24 @@ function Header({
   const handleLogout = useCallback(() => {
     Alert.alert('Cerrar sesión', '¿Estás seguro de cerrar sesión?', [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Aceptar', onPress: logout },
+      {
+        text: 'Aceptar',
+        onPress: async () => {
+          try {
+            await logout();             // Limpia tokens/estado
+            setProfileVisible(false);   // Cierra el modal si estaba abierto
+            navigation?.reset({         // Envía a Login y limpia el stack
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          } catch (e) {
+            console.log('Error en logout:', e);
+            Alert.alert('Error', 'No se pudo cerrar sesión.');
+          }
+        },
+      },
     ]);
-  }, [logout]);
+  }, [logout, navigation]);
 
   const handleBackPress = useCallback(() => {
     if (onBackPress) onBackPress();
@@ -71,6 +86,7 @@ function Header({
       <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.header}>
+          {/* Izquierda */}
           <View style={styles.leftSection}>
             {showBackButton && navigation?.canGoBack() && (
               <TouchableOpacity style={styles.iconPad} onPress={handleBackPress} hitSlop={HIT_SLOP}>
@@ -84,6 +100,7 @@ function Header({
             )}
           </View>
 
+          {/* Centro */}
           <View style={styles.centerSection}>
             {!!title && (
               <Text style={styles.headerTitle} numberOfLines={1}>
@@ -92,6 +109,7 @@ function Header({
             )}
           </View>
 
+          {/* Derecha */}
           <View style={styles.rightSection}>
             {rightComponent ? (
               rightComponent
@@ -104,6 +122,7 @@ function Header({
         </View>
       </SafeAreaView>
 
+      {/* Modal lateral de perfil */}
       <Modal visible={profileVisible} transparent onRequestClose={closeProfile}>
         <View style={styles.overlayContainer}>
           <TouchableWithoutFeedback onPress={closeProfile}>
@@ -120,6 +139,7 @@ function Header({
               <Feather name="x" size={24} color="#A57C36" />
             </TouchableOpacity>
             <Text style={styles.modalTitle}>Perfil del Usuario</Text>
+            {/* Aquí puedes renderizar info del usuario o acciones extra */}
           </Animated.View>
         </View>
       </Modal>

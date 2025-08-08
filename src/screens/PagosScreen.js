@@ -32,6 +32,7 @@ export default function PaymentsScreen({ navigation }) {
       console.error('No hay usuario autenticado');
       return;
     }
+
     try {
       setLoading(true);
       const paymentsData = await pagosService.getPayments(user.id);
@@ -50,14 +51,26 @@ export default function PaymentsScreen({ navigation }) {
     setRefreshing(false);
   };
 
-  const handlePaymentCreated = () => loadPayments();
-  const handlePaymentUpdated = () => loadPayments();
+  const handlePaymentCreated = () => {
+    loadPayments();
+  };
 
-  const navigateToCreatePayment = () =>
-    navigation.navigate('CreatePayment', { onPaymentCreated: handlePaymentCreated });
+  const handlePaymentUpdated = () => {
+    loadPayments();
+  };
 
-  const navigateToEditPayment = (payment) =>
-    navigation.navigate('CreatePayment', { payment, onPaymentUpdated: handlePaymentUpdated });
+  const navigateToCreatePayment = () => {
+    navigation.navigate('CreatePayment', {
+      onPaymentCreated: handlePaymentCreated,
+    });
+  };
+
+  const navigateToEditPayment = (payment) => {
+    navigation.navigate('CreatePayment', {
+      payment: payment,
+      onPaymentUpdated: handlePaymentUpdated,
+    });
+  };
 
   const getStatusColor = (estado) => {
     switch (estado) {
@@ -85,42 +98,47 @@ export default function PaymentsScreen({ navigation }) {
     }
   };
 
-  const formatDate = (dateString) =>
-    new Date(dateString).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
 
-  const formatCurrency = (amount) =>
-    new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN' }).format(amount);
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(amount);
+  };
 
   const renderPaymentCard = (payment) => (
     <TouchableOpacity
       key={payment.id}
       style={styles.paymentCard}
       onPress={() => navigateToEditPayment(payment)}
-      activeOpacity={0.9}
     >
       <View style={styles.paymentHeader}>
-        <Text style={styles.paymentName} numberOfLines={1}>
-          {payment.nombre}
-        </Text>
+        <Text style={styles.paymentName}>{payment.nombre}</Text>
         <View style={[styles.statusBadge, { backgroundColor: getStatusColor(payment.estado) }]}>
           <Text style={styles.statusText}>{getStatusText(payment.estado)}</Text>
         </View>
       </View>
-
+      
       <View style={styles.paymentInfo}>
-        <Text style={styles.paymentCategory} numberOfLines={1}>
-          {payment.categoria_nombre}
-        </Text>
+        <Text style={styles.paymentCategory}>{payment.categoria_nombre}</Text>
         <Text style={styles.paymentDate}>{formatDate(payment.fecha)}</Text>
       </View>
-
+      
       <Text style={styles.paymentAmount}>{formatCurrency(payment.monto)}</Text>
     </TouchableOpacity>
   );
 
   if (loading) {
     return (
-      <ScrollView style={globalStyles.screen} contentContainerStyle={styles.screenContent}>
+      <ScrollView style={globalStyles.screen}>
         <Header navigation={navigation} />
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>Cargando pagos...</Text>
@@ -132,14 +150,15 @@ export default function PaymentsScreen({ navigation }) {
   return (
     <ScrollView
       style={globalStyles.screen}
-      contentContainerStyle={styles.screenContent}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     >
       <Header navigation={navigation} />
-
-      <View style={styles.toolbar}>
+      
+      <View style={styles.header}>
         <Text style={styles.title}>Mis Pagos</Text>
-        <TouchableOpacity style={styles.addButton} onPress={navigateToCreatePayment} activeOpacity={0.9}>
+        <TouchableOpacity style={styles.addButton} onPress={navigateToCreatePayment}>
           <Text style={styles.addButtonText}>+ Nuevo</Text>
         </TouchableOpacity>
       </View>
@@ -147,8 +166,10 @@ export default function PaymentsScreen({ navigation }) {
       {payments.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Text style={styles.emptyTitle}>No tienes pagos registrados</Text>
-          <Text style={styles.emptySubtitle}>Agrega tu primer pago tocando el botón “Nuevo”.</Text>
-          <TouchableOpacity style={styles.emptyButton} onPress={navigateToCreatePayment} activeOpacity={0.9}>
+          <Text style={styles.emptySubtitle}>
+            Agrega tu primer pago tocando el botón "Nuevo"
+          </Text>
+          <TouchableOpacity style={styles.emptyButton} onPress={navigateToCreatePayment}>
             <Text style={styles.emptyButtonText}>Crear Primer Pago</Text>
           </TouchableOpacity>
         </View>
@@ -165,146 +186,133 @@ export default function PaymentsScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  screenContent: {
-    backgroundColor: colors.background,
-    paddingHorizontal: 16,
-    paddingBottom: 24,
-  },
-
-  // Encabezado de la pantalla (coincide con Header styling)
-  toolbar: {
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginTop: 8,
-    marginBottom: 20,
+    marginBottom: 24,
   },
   title: {
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: '700',
-    color: colors.textPrimary,
+    color: '#1F1F1F',
   },
   addButton: {
     backgroundColor: colors.primary,
     paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
   },
   addButtonText: {
     color: '#fff',
     fontSize: 14,
-    fontWeight: '700',
+    fontWeight: '600',
   },
-
-  // Loading
   loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 80,
+    paddingTop: 100,
   },
   loadingText: {
     fontSize: 16,
     color: colors.neutral,
   },
-
-  // Empty state
   emptyContainer: {
     alignItems: 'center',
-    paddingTop: 48,
-    paddingHorizontal: 16,
+    paddingTop: 60,
+    paddingHorizontal: 20,
   },
   emptyTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.textPrimary,
-    marginBottom: 6,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#1F1F1F',
+    marginBottom: 8,
     textAlign: 'center',
   },
   emptySubtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.neutral,
     textAlign: 'center',
-    marginBottom: 18,
-    lineHeight: 20,
+    marginBottom: 24,
+    lineHeight: 22,
   },
   emptyButton: {
     backgroundColor: colors.primary,
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingVertical: 12,
-    borderRadius: 12,
+    borderRadius: 8,
   },
   emptyButtonText: {
     color: '#fff',
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '600',
   },
-
-  // Listado
   paymentsContainer: {
-    marginBottom: 12,
+    marginBottom: 20,
   },
   sectionTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     color: colors.neutral,
-    marginBottom: 12,
+    marginBottom: 16,
   },
-
-  // Card de pago (alineado con estética del Header/tema)
   paymentCard: {
     backgroundColor: '#fff',
-    borderRadius: 16,
-    padding: 14,
+    borderRadius: 12,
+    padding: 16,
     marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#EFEFEF',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
     shadowOpacity: 0.05,
     shadowRadius: 3,
-    elevation: 1,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#F0F0F0',
   },
   paymentHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   paymentName: {
     fontSize: 16,
-    fontWeight: '700',
-    color: colors.textPrimary,
+    fontWeight: '600',
+    color: '#1F1F1F',
     flex: 1,
     marginRight: 12,
   },
   statusBadge: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: 999,
+    borderRadius: 12,
   },
   statusText: {
     color: '#fff',
-    fontSize: 11,
-    fontWeight: '700',
+    fontSize: 12,
+    fontWeight: '600',
   },
   paymentInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 12,
   },
   paymentCategory: {
-    fontSize: 13,
+    fontSize: 14,
     color: colors.neutral,
-    flex: 1,
-    marginRight: 8,
   },
   paymentDate: {
-    fontSize: 13,
+    fontSize: 14,
     color: colors.neutral,
   },
   paymentAmount: {
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '700',
     color: colors.primary,
     textAlign: 'right',
   },
