@@ -7,7 +7,7 @@ import SimpleDonutChart from '../components/SimpleDonutChart';
 import globalStyles from '../styles/globalStyles';
 import colors from '../config/colors';
 
-const API_BASE_URL = 'http://192.168.1.19:5002';
+const API_BASE_URL = 'http://10.16.33.38:8000';
 
 export default function DashboardScreen({ navigation, route }) {
   const [financialData, setFinancialData] = useState({
@@ -20,7 +20,6 @@ export default function DashboardScreen({ navigation, route }) {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(null);
 
-  // Obtener el ID del usuario desde AsyncStorage (como hacen las otras pantallas)
   useEffect(() => {
     const getUserId = async () => {
       try {
@@ -49,7 +48,6 @@ export default function DashboardScreen({ navigation, route }) {
     getUserId();
   }, [route?.params?.userId]);
 
-  // Función para obtener el resumen financiero
   const fetchFinancialSummary = async (userID) => {
     try {
       console.log('Dashboard - Fetching financial summary for user:', userID);
