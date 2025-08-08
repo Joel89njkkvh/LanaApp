@@ -9,14 +9,18 @@ import {
   Platform,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../api'; // 👈 asegúrate que esta ruta sea correcta
+import { useAuth } from '../context/AuthContext'; // ← Usar AuthContext
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // Usar el contexto de autenticación
+  const { register, loading } = useAuth();
 
   const handleRegister = async () => {
     if (!name || !email || !password) {
@@ -25,20 +29,23 @@ export default function RegisterScreen({ navigation }) {
     }
 
     try {
-      const response = await api.post('/auth/registro', {
+      const userData = {
         nombre: name,
         correo: email,
         contraseña: password,
-      });
+      };
 
-      Alert.alert('Registro exitoso', `Bienvenido, ${response.data.nombre}`);
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MainTabs' }],
-      });
+      const result = await register(userData);
+      
+      if (result.success) {
+        // La navegación se maneja automáticamente en el AuthContext
+        Alert.alert('Registro exitoso', `Bienvenido, ${name}`);
+      } else {
+        Alert.alert('Error', result.error || 'No se pudo registrar el usuario');
+      }
     } catch (error) {
-      console.error('Error en el registro:', error.response?.data || error.message);
-      Alert.alert('Error', 'No se pudo registrar el usuario');
+      console.error('Error en el registro:', error);
+      Alert.alert('Error', 'Ocurrió un error al registrar el usuario');
     }
   };
 
@@ -62,6 +69,7 @@ export default function RegisterScreen({ navigation }) {
               style={styles.input}
               value={name}
               onChangeText={setName}
+              editable={!loading}
             />
             <Ionicons name="person-outline" size={24} color="#cba07c" />
           </View>
@@ -78,6 +86,7 @@ export default function RegisterScreen({ navigation }) {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              editable={!loading}
             />
             <Ionicons name="mail-outline" size={24} color="#cba07c" />
           </View>
@@ -93,16 +102,28 @@ export default function RegisterScreen({ navigation }) {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              editable={!loading}
             />
             <Ionicons name="lock-closed-outline" size={24} color="#cba07c" />
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Registrarme</Text>
+        <TouchableOpacity 
+          style={[styles.button, loading && styles.buttonDisabled]} 
+          onPress={handleRegister}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Registrarme</Text>
+          )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('Login')}
+          disabled={loading}
+        >
           <Text style={styles.footerText}>
             ¿Ya tienes cuenta? <Text style={styles.footerLink}>Inicia sesión</Text>
           </Text>
@@ -162,6 +183,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 14,
     marginBottom: 28,
+  },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
   },
   buttonText: {
     color: '#fff',

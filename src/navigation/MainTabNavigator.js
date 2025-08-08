@@ -1,10 +1,12 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { MaterialCommunityIcons, Feather } from '@expo/vector-icons';
+import { MaterialCommunityIcons, FontAwesome5, Ionicons, Entypo } from '@expo/vector-icons';
+
 import DashboardScreen from '../screens/DashboardScreen';
 import TransaccionesScreen from '../screens/TransaccionesScreen';
 import FinanzasScreen from '../screens/FinanzasScreen';
 import PresupuestosScreen from '../screens/PresupuestosScreen';
+import PagosScreen from '../screens/PagosScreen';
 import colors from '../config/colors';
 
 const Tab = createBottomTabNavigator();
@@ -14,49 +16,58 @@ export default function MainTabNavigator() {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: colors.text,
-        tabBarInactiveTintColor: colors.primary,
-        tabBarStyle: { backgroundColor: colors.background },
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
+        tabBarStyle: {
+          backgroundColor: colors.background,
+          borderTopWidth: 0,
+          elevation: 4,
+        },
       }}
     >
       <Tab.Screen
         name="Dashboard"
         component={DashboardScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="speedometer" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="view-dashboard-outline" color={color} size={24} />
           ),
-          title: 'Dashboard',
         }}
       />
       <Tab.Screen
-        name="Transaccion"
+        name="Transacciones"
         component={TransaccionesScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="menu" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <FontAwesome5 name="exchange-alt" color={color} size={20} />
           ),
-          title: 'Transacciones',
         }}
       />
       <Tab.Screen
         name="Finanzas"
         component={FinanzasScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Feather name="trending-up" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="bar-chart-outline" color={color} size={22} />
           ),
-          title: 'Finanzas',
         }}
       />
       <Tab.Screen
-        name="Presupuesto"
+        name="Presupuestos"
         component={PresupuestosScreen}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="scale-balance" color={color} size={size} />
+          tabBarIcon: ({ color }) => (
+            <Entypo name="wallet" color={color} size={22} />
           ),
-          title: 'Presupuestos',
+        }}
+      />
+      <Tab.Screen
+        name="PagosScreen"
+        component={PagosScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons name="credit-card-outline" color={color} size={24} />
+          ),
         }}
       />
     </Tab.Navigator>

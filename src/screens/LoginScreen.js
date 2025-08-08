@@ -9,14 +9,18 @@ import {
   Platform,
   Alert,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import api from '../api'; 
+import { useAuth } from '../context/AuthContext'; // ← Usar AuthContext
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secure, setSecure] = useState(true);
+  
+  // Usar el contexto de autenticación
+  const { login, loading } = useAuth();
 
   const togglePassword = () => setSecure(!secure);
 
@@ -27,23 +31,18 @@ export default function LoginScreen({ navigation }) {
     }
 
     try {
-      const response = await api.post('/auth/login', {
-        correo: email,
-        contraseña: password,
-      });
-
-      const usuario = response.data;
-      console.log('Usuario autenticado:', usuario);
-
-      Alert.alert('Bienvenido', `${usuario.nombre}`);
-
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'MainTabs' }],
-      });
+      const result = await login(email, password);
+      
+      if (result.success) {
+        // La navegación se maneja automáticamente en el AuthContext
+        // No necesitas hacer navigation.reset() aquí
+        Alert.alert('Bienvenid@', 'Has iniciado sesión correctamente');
+      } else {
+        Alert.alert('Error', result.error || 'Credenciales inválidas');
+      }
     } catch (error) {
-      console.error('Login error:', error.response?.data || error.message);
-      Alert.alert('Error', 'Credenciales inválidas');
+      console.error('❌ Error en login:', error);
+      Alert.alert('Error', 'Ocurrió un error al iniciar sesión');
     }
   };
 
@@ -69,6 +68,7 @@ export default function LoginScreen({ navigation }) {
               onChangeText={setEmail}
               keyboardType="email-address"
               autoCapitalize="none"
+              editable={!loading}
             />
             <Ionicons name="mail-outline" size={24} color="#cba07c" />
           </View>
@@ -84,25 +84,38 @@ export default function LoginScreen({ navigation }) {
               value={password}
               onChangeText={setPassword}
               secureTextEntry={secure}
+              editable={!loading}
             />
-            <TouchableOpacity onPress={togglePassword}>
+            <TouchableOpacity onPress={togglePassword} disabled={loading}>
               <Ionicons name={secure ? 'eye-off-outline' : 'eye-outline'} size={24} color="#cba07c" />
             </TouchableOpacity>
           </View>
         </View>
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
-          <Text style={styles.buttonText}>Entrar</Text>
+        <TouchableOpacity 
+          style={[styles.button, loading && styles.buttonDisabled]} 
+          onPress={handleLogin}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Entrar</Text>
+          )}
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Register')}>
+        <TouchableOpacity 
+          onPress={() => navigation.navigate('Register')}
+          disabled={loading}
+        >
           <Text style={styles.footerText}>
             ¿No tienes cuenta? <Text style={styles.footerLink}>Regístrate</Text>
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
+        <TouchableOpacity 
           onPress={() => Alert.alert('Recuperación', 'Función no implementada aún')}
+          disabled={loading}
         >
           <Text style={styles.forgotText}>¿Olvidaste tu contraseña?</Text>
         </TouchableOpacity>
@@ -161,6 +174,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 14,
     marginBottom: 28,
+  },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
   },
   buttonText: { color: '#fff', fontSize: 18, fontWeight: '600' },
   footerText: {

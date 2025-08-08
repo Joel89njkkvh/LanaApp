@@ -9,12 +9,24 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Alert,
+  SafeAreaView,
+  StatusBar,
 } from 'react-native';
-import { Feather } from '@expo/vector-icons';
+import { Feather, Ionicons } from '@expo/vector-icons';
+import { useAuth } from '../context/AuthContext';
+import colors from '../config/colors';
 
-export default function Header({ navigation }) {
+export default function Header({ 
+  navigation, 
+  title, 
+  showBackButton = false, 
+  showProfileActions = true,
+  rightComponent,
+  onBackPress 
+}) {
   const [profileVisible, setProfileVisible] = useState(false);
   const slideAnim = useRef(new Animated.Value(-Dimensions.get('window').width / 2)).current;
+  const { logout } = useAuth();
 
   const openProfile = () => {
     setProfileVisible(true);
@@ -36,20 +48,66 @@ export default function Header({ navigation }) {
   const handleLogout = () => {
     Alert.alert('Cerrar sesión', '¿Estás seguro de cerrar sesión?', [
       { text: 'Cancelar', style: 'cancel' },
-      { text: 'Aceptar', onPress: () => navigation.replace('home') },
+      { text: 'Aceptar', onPress: () => logout() },
     ]);
   };
+
+  const handleBackPress = () => {
+    if (onBackPress) {
+      onBackPress();
+    } else if (navigation?.canGoBack()) {
+      navigation.goBack();
+    }
+  };
+
   return (
-    <View>
-      {/* Botones superiores */}
-      <View style={styles.headerTop}>
-        <TouchableOpacity onPress={openProfile}>
-          <Feather name="user" size={22} color="#A57C36" />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleLogout}>
-          <Feather name="log-out" size={22} color="#c0392b" />
-        </TouchableOpacity>
-      </View>
+    <>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.header}>
+          {/* Sección izquierda */}
+          <View style={styles.leftSection}>
+            {showBackButton && navigation?.canGoBack() && (
+              <TouchableOpacity
+                style={styles.backButton}
+                onPress={handleBackPress}
+                hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              >
+                <Ionicons
+                  name="chevron-back"
+                  size={24}
+                  color={colors.textPrimary}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
+
+          {/* Sección central */}
+          <View style={styles.centerSection}>
+            {title && (
+              <Text style={styles.headerTitle} numberOfLines={1}>
+                {title}
+              </Text>
+            )}
+          </View>
+
+          {/* Sección derecha */}
+          <View style={styles.rightSection}>
+            {rightComponent ? (
+              rightComponent
+            ) : showProfileActions ? (
+              <View style={styles.headerActions}>
+                <TouchableOpacity style={styles.actionButton} onPress={openProfile}>
+                  <Feather name="user" size={22} color="#A57C36" />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionButton} onPress={handleLogout}>
+                  <Feather name="log-out" size={22} color="#c0392b" />
+                </TouchableOpacity>
+              </View>
+            ) : null}
+          </View>
+        </View>
+      </SafeAreaView>
 
       {/* Modal de perfil */}
       <Modal
@@ -70,18 +128,53 @@ export default function Header({ navigation }) {
           </Animated.View>
         </View>
       </Modal>
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  headerTop: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingBottom: 10,
+  safeArea: {
+    backgroundColor: colors.background,
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: colors.background,
+    minHeight: 56,
+  },
+  leftSection: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  centerSection: {
+    flex: 2,
+    alignItems: 'center',
+  },
+  rightSection: {
+    flex: 1,
+    alignItems: 'flex-end',
+  },
+  backButton: {
+    padding: 4,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  actionButton: {
+    padding: 8,
+    marginLeft: 4,
+  },
+  // Estilos del modal (mantienes los originales)
   modalContainer: {
     position: 'absolute',
     top: 0,
