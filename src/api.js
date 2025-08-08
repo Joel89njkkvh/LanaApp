@@ -7,13 +7,13 @@ let baseURL = '';
 if (__DEV__) {
   // Entorno de desarrollo
   if (Platform.OS === 'android') {
-    baseURL = 'http://192.168.1.19:5002'; // Android en misma red WiFi
+    baseURL = 'http://10.16.33.38:8000'; // Android en misma red WiFi
   } else if (Platform.OS === 'ios') {
-    baseURL = 'http://192.168.1.19:5002'; // iOS en misma red WiFi
+    baseURL = 'http://10.16.33.38:8000'; // iOS en misma red WiFi
   } else if (Platform.OS === 'web') {
-    baseURL = 'http://localhost:5002'; // Web (localhost)
+    baseURL = 'http://localhost:8000'; // Web (localhost)
   } else {
-    baseURL = 'http://localhost:5002'; // Otros casos (por si acaso)
+    baseURL = 'http://localhost:8000'; // Otros casos (por si acaso)
   }
 } else {
   // Entorno de producción
