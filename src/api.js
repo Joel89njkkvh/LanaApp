@@ -1,27 +1,9 @@
 import axios from 'axios';
-import { Platform } from 'react-native';
+import { API_BASE_URL } from './config/apiConfig';
 
-// Configuración base URL según entorno y plataforma
-let baseURL = '';
-
-if (__DEV__) {
-  // Entorno de desarrollo
-  if (Platform.OS === 'android') {
-    baseURL = 'http://10.16.33.38:8000'; // Android en misma red WiFi
-  } else if (Platform.OS === 'ios') {
-    baseURL = 'http://10.16.33.38:8000'; // iOS en misma red WiFi
-  } else if (Platform.OS === 'web') {
-    baseURL = 'http://10.16.33.38:8000'; // Web (localhost)
-  } else {
-    baseURL = 'http://10.16.33.38:8000'; // Otros casos (por si acaso)
-  }
-} else {
-  // Entorno de producción
-  baseURL = 'https://tu-api-en-produccion.com'; // Cambia esta URL por la real de producción
-}
 
 const api = axios.create({
-  baseURL,
+  baseURL: API_BASE_URL,
   timeout: 10000, // 10 segundos de timeout
   headers: {
     'Content-Type': 'application/json',

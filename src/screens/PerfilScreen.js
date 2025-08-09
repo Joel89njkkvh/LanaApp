@@ -4,8 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Header from '../components/Header';
 import globalStyles from '../styles/globalStyles';
 import colors from '../config/colors';
-
-const API_BASE_URL = 'http://192.168.1.19:5002';
+import { API_BASE_URL } from '../config/apiConfig';
 
 export default function PerfilScreen({ navigation }) {
   const [userData, setUserData] = useState({

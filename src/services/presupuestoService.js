@@ -1,5 +1,5 @@
 // services/presupuestosService.js
-const API_BASE_URL = 'http://10.16.33.38:8000'; // Actualizada con tu puerto correcto
+import { API_BASE_URL } from '../config/apiConfig';
 
 class PresupuestosService {
   

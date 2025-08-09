@@ -6,14 +6,13 @@ import { AuthProvider, useAuth } from './src/context/AuthContext';
 import AgregarTransaccionScreen from './src/screens/AgregarTransaccionScreen';
 import PresupuestosScreen from './src/screens/PresupuestosScreen';
 import BudgetFormScreen from './src/screens/BudgetFormScreen';
-import PagoFormScreen from './src/screens/PagoFormScreen'; // Nueva importación
+import PagoFormScreen from './src/screens/PagoFormScreen'; 
 import HomeScreen from './src/screens/HomeScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import RegisterScreen from './src/screens/RegisterScreen';
 import MainTabNavigator from './src/navigation/MainTabNavigator';
 
 const Stack = createNativeStackNavigator();
-
 const AppContent = () => {
   const { user, loading, error, clearError, setNavigation } = useAuth();
   const navigationRef = useRef();
